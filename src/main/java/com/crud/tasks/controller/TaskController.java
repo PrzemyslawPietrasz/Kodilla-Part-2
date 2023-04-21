@@ -39,11 +39,19 @@ public class TaskController {
 
 
 
-    @DeleteMapping(value = "{taskId}")
-    public void deleteTask(@PathVariable Long taskId) {
+    @DeleteMapping(value = "/{taskId}")
+    public void deleteTask(@PathVariable Long taskId) throws TaskNotFoundException {
+
+        if (taskId!=null){
+     service.deleteTask(taskId);}
+        else {
+            throw new TaskNotFoundException();
+        }
 
 
     }
+
+
 
     @PutMapping
     public ResponseEntity<TaskDto> updateTask(@RequestBody TaskDto taskDto) {
