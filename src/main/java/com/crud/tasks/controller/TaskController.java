@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/tasks")
