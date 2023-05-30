@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -21,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class TrelloClientTest {
 
     @InjectMocks
@@ -62,6 +66,9 @@ class TrelloClientTest {
     @Test
     public void shouldCreateCard() throws URISyntaxException {
         //Given
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("test");
+        when(trelloConfig.getTrelloToken()).thenReturn("test");
         TrelloCardDto trelloCardDto = new TrelloCardDto(
                 "Test task",
                 "Test Description",
@@ -86,6 +93,24 @@ class TrelloClientTest {
         assertEquals("1", newCard.getId());
         assertEquals("Test task", newCard.getName());
         assertEquals("http://test.com", newCard.getShortUrl());
+    }
+
+    @Test
+    public void shouldReturnEmptyList() throws URISyntaxException {
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("test");
+        when(trelloConfig.getTrelloToken()).thenReturn("test");
+        when(trelloConfig.getTrelloUser()).thenReturn("przemysaw92");
+        //given
+        URI uri = new URI("http://test.com/members/przemysaw92/boards?key=test&token=test&fields=name,id&lists=all");
+
+        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(null);
+
+        //when
+        List<TrelloBoardDto> fetchedTrelloBoards = trelloClient.getTrelloBoards();
+
+        //then
+        assertEquals(0, fetchedTrelloBoards.size());
     }
 
     }
