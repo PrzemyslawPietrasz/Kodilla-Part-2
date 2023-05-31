@@ -12,8 +12,8 @@ import lombok.Data;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class TrelloBoardDto {
 
     @JsonProperty("id")
