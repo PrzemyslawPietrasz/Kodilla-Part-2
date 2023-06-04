@@ -12,4 +12,7 @@ public class TrelloAttachmentsByTypeDto {
 
     @JsonProperty("trello")
     private TrelloTrelloDto trello;
+
+    public TrelloAttachmentsByTypeDto() {
+    }
 }
