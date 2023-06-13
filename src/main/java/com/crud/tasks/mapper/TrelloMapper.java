@@ -4,6 +4,7 @@ import com.crud.tasks.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -45,5 +46,11 @@ public class TrelloMapper {
     public TrelloCard mapToCard(final TrelloCardDto trelloCardDto) {
         return new TrelloCard(trelloCardDto.getName(), trelloCardDto.getDescription(), trelloCardDto.getPos(), trelloCardDto.getListId());
     }
+
+//    public List<TaskDto> mapTaskDtoList(final List<Task> taskList) {
+//        return taskList.stream()
+//                .map(t -> new TaskDto(t.getId(), t.getTitle(), t.getContent()))
+//                .collect(Collectors.toList());
+//    }
 
 }

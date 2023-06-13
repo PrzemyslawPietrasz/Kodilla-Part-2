@@ -68,6 +68,10 @@ public class TrelloClient {
         }
     }
 
+    public URI getTrelloBoardsUriPublic() { // Dodaj publiczną wersję metody
+        return getTrelloBoardsUri(); // Wywołaj prywatną metodę w publicznej metodzie
+    }
+
     private URI getTrelloBoardsUri() {
         return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint()
                         + "/members/" + trelloConfig.getTrelloUsername() + "/boards")

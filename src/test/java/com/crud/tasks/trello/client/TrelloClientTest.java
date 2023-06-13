@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,7 +24,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class TrelloClientTest {
 
@@ -112,5 +112,26 @@ class TrelloClientTest {
         //then
         assertEquals(0, fetchedTrelloBoards.size());
     }
+    @Test
+    public void testGetTrelloBoardsUri() {
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("https://api.trello.com");
+        when(trelloConfig.getTrelloUsername()).thenReturn("yourUsername");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("yourAppKey");
+        when(trelloConfig.getTrelloToken()).thenReturn("yourToken");
 
+        URI expectedUri = UriComponentsBuilder.fromHttpUrl("https://api.trello.com/members/yourUsername/boards")
+                .queryParam("key", "yourAppKey")
+                .queryParam("token", "yourToken")
+                .queryParam("fields", "name,id")
+                .queryParam("lists", "all")
+                .build().encode().toUri();
+
+        URI actualUri = trelloClient.getTrelloBoardsUriPublic(); // Zmieniona metoda
+
+        assertEquals(expectedUri, actualUri);
     }
+
+}
+
+
+
