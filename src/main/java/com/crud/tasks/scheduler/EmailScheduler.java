@@ -3,36 +3,35 @@ package com.crud.tasks.scheduler;
 import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.domain.Mail;
 import com.crud.tasks.repository.TaskRepository;
+import com.crud.tasks.service.EmailTemplateSelector;
 import com.crud.tasks.service.SimpleEmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class EmailScheduler {
+    @Autowired
+    private SimpleEmailService simpleEmailService;
 
-    private final SimpleEmailService simpleEmailService;
-    private final TaskRepository taskRepository;
-    private final AdminConfig adminConfig;
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private AdminConfig adminConfig;
+
     private static final String SUBJECT = "Tasks: Once a day email";
-    private String singleOrMoreTasks;
 
+    //@Scheduled(fixedDelay = 10000)
     @Scheduled(cron = "0 0 10 * * *")
     public void sendInformationEmail() {
         long size = taskRepository.count();
-        if (size == 1) {
-            singleOrMoreTasks = "task.";
-        } else {
-            singleOrMoreTasks = "tasks.";
-        }
-        simpleEmailService.send(
-                new Mail(
-                        adminConfig.getAdminMail(), null,
-                        SUBJECT,
-                        "Currently in database you got: " + size + " " + singleOrMoreTasks
-                )
-        );
+        String taskOrTasks = size == 1 ? " task" : " tasks";
+        simpleEmailService.send(new Mail(
+                adminConfig.getAdminMail(),
+                SUBJECT,"Email",
+                "Currently in database you've got: " + size + taskOrTasks
+        ), EmailTemplateSelector.SCHEDULED_EMAIL);
     }
-
 }

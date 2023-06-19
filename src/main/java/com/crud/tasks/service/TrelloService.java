@@ -18,19 +18,17 @@ import static org.springframework.data.mapping.Alias.ofNullable;
 
 @Service
 public class TrelloService {
-    private static final String SUBJECT = "Tasks: New Trello Card";
 
     @Autowired
     private TrelloClient trelloClient;
 
-
     @Autowired
     private SimpleEmailService emailService;
-
 
     @Autowired
     private AdminConfig adminConfig;
 
+    private static final String SUBJECT = "Tasks: New Trello card";
 
     public List<TrelloBoardDto> fetchTrelloBoards() {
         return trelloClient.getTrelloBoards();
@@ -38,11 +36,13 @@ public class TrelloService {
 
     public CreatedTrelloCardDto createTrelloCard(final TrelloCardDto trelloCardDto) {
         CreatedTrelloCardDto newCard = trelloClient.createNewCard(trelloCardDto);
-        emailService.send(new Mail(adminConfig.getAdminMail(),null,SUBJECT, " New card: " + trelloCardDto.getName() + "Has been created on your Trello account"));
 
+        Optional.ofNullable(newCard).ifPresent(card ->
+                emailService.send(new Mail(
+                        adminConfig.getAdminMail(),
+                        SUBJECT,
+                        "New card: " + trelloCardDto.getName() + " has been created on your Trello account"
+                ), EmailTemplateSelector.TRELLO_CARD_EMAIL));
         return newCard;
     }
-
-
-
 }
