@@ -23,6 +23,13 @@ public class EmailScheduler {
 
     private static final String SUBJECT = "Tasks: Once a day email";
 
+    @Autowired
+    public EmailScheduler(SimpleEmailService simpleEmailService, TaskRepository taskRepository, AdminConfig adminConfig) {
+        this.simpleEmailService = simpleEmailService;
+        this.taskRepository = taskRepository;
+        this.adminConfig = adminConfig;
+    }
+
     //@Scheduled(fixedDelay = 10000)
     @Scheduled(cron = "0 0 10 * * *")
     public void sendInformationEmail() {

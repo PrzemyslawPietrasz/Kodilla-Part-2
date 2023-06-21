@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 @Service
 public class SimpleEmailService {
 
@@ -23,6 +24,9 @@ public class SimpleEmailService {
 
     @Autowired
     private MailCreatorService mailCreatorService;
+    public SimpleEmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public void send(final Mail mail, EmailTemplateSelector template) {
         LOGGER.info("Starting email preparation...");
